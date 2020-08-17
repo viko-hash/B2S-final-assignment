@@ -17,17 +17,37 @@ import { elements, renderLoader, clearLoader } from './views/base';
 
 const state = {};
 
+let initialRecipes = [
+	{
+		image_url:
+			'http://forkify-api.herokuapp.com/images/best_pizza_dough_recipe1b20.jpg',
+		publisher: '101 Cookbooks',
+		publisher_url: 'http://www.101cookbooks.com',
+		recipe_id: '47746',
+		social_rank: 100,
+		source_url: 'http://www.101cookbooks.com/archives/001199.html',
+		title: 'Best Pizza Dough Ever'
+	},
+	{
+		image_url: 'http://forkify-api.herokuapp.com/images/fruitpizza9a19.jpg',
+		publisher: 'The Pioneer Woman',
+		publisher_url: 'http://thepioneerwoman.com',
+		recipe_id: '46956',
+		social_rank: 100,
+		source_url: 'http://thepioneerwoman.com/cooking/2012/01/fruit-pizza/',
+		title: 'Deep Dish Fruit Pizza'
+	}
+];
+
 // handle submit on search
 const searchHandler = async () => {
 	const searchInput = searchView.getInput();
 
 	if (searchInput) {
 		state.search = new Search(searchInput);
-
 		searchView.clearInput();
 		searchView.clearResults();
 		renderLoader(elements.searchRes);
-
 		try {
 			await state.search.getRecipes();
 			clearLoader();
@@ -57,7 +77,6 @@ elements.searchResPages.addEventListener('click', (e) => {
 // recipe controller
 const recipeController = async () => {
 	const recipeId = window.location.hash.replace('#', '');
-
 	if (recipeId) {
 		recipeView.clearRecipe();
 		renderLoader(elements.recipe);
@@ -74,6 +93,8 @@ const recipeController = async () => {
 			alert('Error occurred while fetching Recipe');
 			console.log('Recipe Error: ', error);
 		}
+	} else {
+		searchView.renderResults(initialRecipes);
 	}
 };
 
